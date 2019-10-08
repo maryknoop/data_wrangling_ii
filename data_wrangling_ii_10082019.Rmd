@@ -49,10 +49,50 @@ table_marj =
 table_marj
 ```
 
+```{r}
+#scrape nyc cost of living from url 
+nyc_cost = 
+  read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
+  html_nodes(css = "table") %>%
+  .[[1]] %>%
+  html_table(header = TRUE)
+nyc_cost
+```
+
+```{r}
+#scrape from IMDB
+hpsaga_html = 
+  read_html("https://www.imdb.com/list/ls000630791/")
+hpsaga_html
+
+```
+
+```{r}
+title_vec = 
+  hpsaga_html %>%
+  html_nodes(".lister-item-header a") %>%
+  html_text()
+title_vec
+
+gross_rev_vec = 
+  hpsaga_html %>%
+  html_nodes(".text-small:nth-child(7) span:nth-child(5)") %>%
+  html_text()
+
+runtime_vec = 
+  hpsaga_html %>%
+  html_nodes(".runtime") %>%
+  html_text()
+
+hpsaga_df = 
+  tibble(
+    title = title_vec,
+    rev = gross_rev_vec,
+    runtime = runtime_vec)
 
 
 
 
-
+```
 
 

@@ -112,3 +112,70 @@ table_marj
     ## #   `18-25(2014-2015)` <chr>, `18-25(P Value)` <chr>,
     ## #   `26+(2013-2014)` <chr>, `26+(2014-2015)` <chr>, `26+(P Value)` <chr>,
     ## #   `18+(2013-2014)` <chr>, `18+(2014-2015)` <chr>, `18+(P Value)` <chr>
+
+``` r
+#scrape nyc cost of living from url 
+nyc_cost = 
+  read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
+  html_nodes(css = "table") %>%
+  .[[1]] %>%
+  html_table(header = TRUE)
+nyc_cost
+```
+
+    ##     COST OF LIVING New York New York      USA
+    ## 1          Overall    209.3    129.4      100
+    ## 2          Grocery    114.7    101.7      100
+    ## 3           Health      101    100.8      100
+    ## 4          Housing      354    150.8      100
+    ## 5 Median Home Cost $680,500 $305,400 $231,200
+    ## 6        Utilities    150.5    115.9      100
+    ## 7   Transportation    211.5    161.5      100
+    ## 8    Miscellaneous    121.2    101.6      100
+
+``` r
+#scrape from IMDB
+hpsaga_html = 
+  read_html("https://www.imdb.com/list/ls000630791/")
+hpsaga_html
+```
+
+    ## {html_document}
+    ## <html xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
+    ## [1] <head>\n<meta http-equiv="Content-Type" content="text/html; charset= ...
+    ## [2] <body id="styleguide-v2" class="fixed">\n            <img height="1" ...
+
+``` r
+title_vec = 
+  hpsaga_html %>%
+  html_nodes(".lister-item-header a") %>%
+  html_text()
+title_vec
+```
+
+    ## [1] "Harry Potter and the Sorcerer's Stone"       
+    ## [2] "Harry Potter and the Chamber of Secrets"     
+    ## [3] "Harry Potter and the Prisoner of Azkaban"    
+    ## [4] "Harry Potter and the Goblet of Fire"         
+    ## [5] "Harry Potter and the Order of the Phoenix"   
+    ## [6] "Harry Potter and the Half-Blood Prince"      
+    ## [7] "Harry Potter and the Deathly Hallows: Part 1"
+    ## [8] "Harry Potter and the Deathly Hallows: Part 2"
+
+``` r
+gross_rev_vec = 
+  hpsaga_html %>%
+  html_nodes(".text-small:nth-child(7) span:nth-child(5)") %>%
+  html_text()
+
+runtime_vec = 
+  hpsaga_html %>%
+  html_nodes(".runtime") %>%
+  html_text()
+
+hpsaga_df = 
+  tibble(
+    title = title_vec,
+    rev = gross_rev_vec,
+    runtime = runtime_vec)
+```
