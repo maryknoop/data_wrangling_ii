@@ -1,0 +1,58 @@
+---
+title: "data_wrangling_ii_10082019"
+author: "Mary Knoop"
+date: "10/8/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(httr)
+```
+
+```{r}
+#read in url and name it drug_use_xml
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+drug_use_xml = read_html(url)
+
+drug_use_xml
+```
+
+```{r}
+#scrape the first table from the dataset gathered from the url
+drug_use_xml %>%
+  html_nodes(css = "table")
+```
+
+```{r}
+#view table data
+table_marj = 
+  (drug_use_xml %>% html_nodes(css = "table")) %>% 
+  .[[1]] %>%
+  html_table() 
+```
+
+
+```{r}
+#view table from url and remove the first column since it was a repeating note in each column
+table_marj = 
+  (drug_use_xml %>% html_nodes(css = "table")) %>% 
+  .[[1]] %>%
+  html_table() %>%
+  slice(-1) %>% 
+  as_tibble()
+table_marj
+```
+
+
+
+
+
+
+
+
